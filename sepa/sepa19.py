@@ -289,11 +289,11 @@ class Concept(XmlModel):
 
 
 class GenericPhysicalLegalEntity(XmlModel):
-    _sort_order = ('main_tag', 'name', 'PostalAddress', 'identification')
+    _sort_order = ('main_tag', 'entity_name', 'PostalAddress', 'identification')
     
     def __init__(self, tag):
         self.main_tag = XmlField(tag)
-        self.name = XmlField('Nm')
+        self.entity_name = XmlField('Nm')
         self.postal_address = PostalAddress()
         self.identification = GenericPhysicalLegalEntityId()
         super(GenericPhysicalLegalEntity, self).__init__(tag, 'main_tag')
@@ -367,7 +367,7 @@ class DirectDebitOperationInfo(XmlModel):
 
 class SepaHeader(XmlModel):
     _sort_order = ('sepa_header', 'message_id', 'creation_date_time',
-                   'number_of_operations', 'checksum', 'initiation_part')
+                   'number_of_operations', 'checksum', 'initiating_party')
     
     def __init__(self):
         self.sepa_header = XmlField('GrpHrd')
@@ -375,7 +375,7 @@ class SepaHeader(XmlModel):
         self.creation_date_time = XmlField('CreDtTm')
         self.number_of_operations = XmlField('NbOfTxs')
         self.checksum = XmlField('CtrlSum')
-        self.initiation_part = GenericPhysicalLegalEntity('InitgPty')
+        self.initiating_party = GenericPhysicalLegalEntity('InitgPty')
         super(SepaHeader, self).__init__('GrpHrd', 'sepa_header')
 
 
