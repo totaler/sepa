@@ -313,11 +313,11 @@ class PaymentTypeInfo(XmlModel):
 
 
 class NameAndAddress(XmlModel):
-    _sort_order = ('creditor', 'name', 'postal_address')
+    _sort_order = ('main_tag', 'name_name', 'postal_address')
     
     def __init__(self, tag):
         self.main_tag = XmlField(tag)
-        self.name = XmlField('Nm')
+        self.name_name = XmlField('Nm')
         self.postal_address = PostalAddress()
         super(NameAndAddress, self).__init__(tag, 'main_tag')
 
@@ -342,7 +342,12 @@ class BankAgent(XmlModel):
         
         
 class DirectDebitOperationInfo(XmlModel):
-    _sort_order = ('')
+    _sort_order = ('direct_debit_operation_info', 'payment_identifier',
+                   'ordered_amount', 'charge_clausule',
+                   'direct_debit_operation', 'ultimate_creditor',
+                   'ultimate_creditor', 'debiter_agent', 'debiter',
+                   'debiter_account', 'ultimate_debiter', 'purpose',
+                   'regulatory_reglament', 'concept')
 
     def __init__(self):
         self.direct_debit_operation_info = XmlField('DrctDbtTxInf')
@@ -389,20 +394,20 @@ class PaymentInformation(XmlModel):
     
     def __init__(self):
         self.payment_information = XmlField('PmtInf')
-        self.payment_info_identifier = XmlField('PmtInfId')
-        self.payment_method = XmlField('PmntMtd')
+        self.payment_info_identifier = XmlField('PmtInfId') # Mandatory
+        self.payment_method = XmlField('PmntMtd') # Mandatory
         self.batchbook = XmlField('BtchBookg')
         self.number_of_operations = XmlField('NbOfTxs')
         self.checksum = XmlField('CtrlSum')
         self.payment_type_info = PaymentTypeInfo()
-        self.collection_date = XmlField('ReqdColltnDt')
-        self.creditor = NameAndAddress('Crdtr')
-        self.creditor_account = BankAccount('CdtrAcct')
-        self.creditor_agent = BankAgent('CdtrAgt')
+        self.collection_date = XmlField('ReqdColltnDt') # Mandatory
+        self.creditor = NameAndAddress('Crdtr') # Mandatory
+        self.creditor_account = BankAccount('CdtrAcct') # Mandatory
+        self.creditor_agent = BankAgent('CdtrAgt') # Mandatory
         self.ultimate_creditor = GenericPhysicalLegalEntity('UltmtCdtr')
         self.charge_clausule = XmlField('ChrgBr')
         self.creditor_identifier = GenericPhysicalLegalEntity('CdtrSchmeId')
-        self.direct_debit_operation_info = DirectDebitOperationInfo()        
+        self.direct_debit_operation_info = [] # DirectDebitOperationInfo
         super(PaymentInformation, self).__init__('PmtInf',
                                                  'payment_information')
 
@@ -416,5 +421,5 @@ class DirectDebitInitMessage(XmlModel):
     def __init__(self):
         self.root = XmlField('CstmrDrctDbtInitn')
         self.sepa_header = SepaHeader()
-        self.payment_information = PaymentInformation()
+        self.payment_information = [] # PaymentInformation
         super(DirectDebitInitMessage, self).__init__('CstmrDrctDbtInitn', 'root')
