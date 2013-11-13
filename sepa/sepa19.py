@@ -159,6 +159,14 @@ class StructuredConcept(XmlModel):
         super(StructuredConcept, self).__init__('CdtrRefInf',
                                                 'strcuctured_concept')
 
+class Amount(XmlModel):
+    _sort_order = ('amount', 'insted_amount')
+    
+    def __init__(self):
+        self.amount = XmlField('Amt')
+        self.insted_amount = XmlField('InstdAmt')
+        super(Amount, self).__init__('Amt', 'amount')
+        
 
 ############################### Level 3 ######################################
 
@@ -283,7 +291,38 @@ class Concept(XmlModel):
         self.unstructured = XmlField('Ustrd')
         self.structured = StructuredConcept()
         super(Concept, self).__init__('RmtInf', 'concept')
+        
 
+class Reason(XmlModel):
+    _sort_order = ('reason', 'code')
+
+    def __init__(self):
+        self.reason = XmlField('Rsn')
+        self.code = XmlField('Cd')
+        super(Reason, self).__ini__('Rsn', 'reason')
+
+
+class OriginalOperationRef(XmlModel):
+    _sort_order = ('original_operation_ref', 'amount', 'collection_date',
+                    'creditor_identifier', 'payment_type_info', 'mandate_info',
+                    'concept', 'ultimate_debtor', 'debtor', 'debtor_account',
+                    'creditor', 'ultimate_creditor')
+    
+    def __init__(self):
+        self.original_operation_ref = XmlField('OrgnlTxRef')
+        self.amount = Amount() # TODO Im HERE
+        self.collection_date = XmlField('ReqdColltnDt')
+        self.creditor_identifier = GenericPhysicalLegalEntity('CdtrSchmeId')
+        self.payment_type_info = PaymentTypeInfo()
+        self.mandate_info = MandateInformation()
+        self.concept = Concept()
+        self.ultimate_debtor = GenericPhysicalLegalEntity('UltmDbtr')
+        self.debtor = GenericPhysicalLegalEntity('Dbtr')
+        self.debtor_account = BankAccount('DbtrAcct')
+        self.creditor = GenericPhysicalLegalEntity('Cdtr')
+        self.ultimate_creditor = GenericPhysicalLegalEntity('UltmCdtr')
+        super(OriginalOperationRef, self).__init__('OrgnlTxRef',
+                                                   'original_operation_ref')
 
 ############################### Level 2 ######################################
 
@@ -369,13 +408,43 @@ class DirectDebitOperationInfo(XmlModel):
     def set_currency(self, ccy):
         self.instructed_amount.attributes.update({'Ccy': ccy})
         
+        
+class StatusReasonInfo(XmlModel):
+    _sort_order = ('status_reason_info', 'originator', 'reason')
+    
+    def __init__(self):
+        self.status_reason_info = XmlField('StsRsnInf')
+        self.originator = GenericPhysicalLegalEntity('Orgtr')
+        self.reason = Reason()
+        super(StatusReasonInfo, self).__init__('StsRsnInf',
+                                                      'status_reason_info')
+
+
+class OperationStatusInfo(XmlModel):
+    _sort_order = ('operation_status_info', 'status_id',
+                   'original_insruction_id', 'original_end_to_end_id',
+                   'operation_status', 'status_reason_info',
+                   'original_operation_ref')
+    
+    def __init__(self):
+        self.operation_status_info = XmlField('TxInfAndSts')
+        self.status_id = XmlField('StsId')
+        self.original_insruction_id = XmlField('OrgnlInstrId')
+        self.original_end_to_end_id = XmlField('OrgnlEndToEndId')
+        self.operation_status = XmlField('TxSts')
+        self.status_reason_info = [] # StatusReasonInfo
+        self.original_operation_ref = OriginalOperationRef()
+        super(OperationStatusInfo, self).__init__('TxInfAndSts',
+                                                  'operation_status_info')
+
 
 ############################### Level 1 ######################################
 
 
 class SepaHeader(XmlModel):
     _sort_order = ('sepa_header', 'message_id', 'creation_date_time',
-                   'number_of_operations', 'checksum', 'initiating_party')
+                   'number_of_operations', 'checksum', 'initiating_party',
+                   'creditor_agent')
     
     def __init__(self):
         self.sepa_header = XmlField('GrpHrd')
@@ -384,6 +453,8 @@ class SepaHeader(XmlModel):
         self.number_of_operations = XmlField('NbOfTxs')
         self.checksum = XmlField('CtrlSum')
         self.initiating_party = GenericPhysicalLegalEntity('InitgPty')
+        # DirectDebitDevolutionMessage Specifics
+        self.creditor_agent = BankAgent('CdtrAgt')
         super(SepaHeader, self).__init__('GrpHrd', 'sepa_header')
 
 
@@ -416,11 +487,36 @@ class PaymentInformation(XmlModel):
 
 
 class OriginalGroupInfo(XmlModel):
-    pass
+    _sort_order = ('original_group_info', 'original_msg_id',
+                   'original_msg_name_id', 'original_number_of_operations',
+                   'original_checksum', 'group_state', 'status_reason_info')
+    
+    def __init__(self):
+        self.original_group_info = XmlField('OrgnlGrpInfAndSts')
+        self.original_msg_id = XmlField('OrgnlMsgId')
+        self.original_msg_name_id = XmlField('OrgnlMsgNmId')
+        self.original_number_of_operations = XmlField('OrgnlNbOfTxs')
+        self.original_checksum = XmlField('OrgnlCtrlSum')
+        self.group_state = XmlField('GrpSts')
+        self.status_reason_info = [] # StatusReasonInfo
+        super(OriginalGroupInfo, self).__init__('OrgnlGrpInfAndSts',
+                                                'original_group_info')
 
 
 class OriginalPaymentInfo(XmlModel):
-    pass
+    _sort_order = ()
+    
+    def __init__(self):
+        self.original_payment_info = XmlField('OrgnlPmtInfAndSts')
+        self.original_payment_id = XmlField('OrgnlPmtInfId')
+        self.original_number_of_operations = XmlField('OrgnlNbOfTxs')
+        self.original_checksum = XmlField('OrgnlCtrlSum')
+        self.payment_information_status = XmlField('PmtInfSts')
+        self.status_reason_info = [] # StatusReasonInfo
+        self.operation_status_info = [] # OperationStatusInfo
+        super(OriginalPaymentInfo, self).__init__('OrgnlPmtInfAndSts',
+                                                  'original_payment_info')
+
 
 ############################### Level 0 ######################################
 
