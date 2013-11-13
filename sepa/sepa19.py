@@ -32,14 +32,14 @@ class SchemeName(XmlModel):
         super(SchemeName, self).__init__('SchmeNm', 'scheme_name')
 
 
-class OriginalDebiterAgent(XmlModel):
-    _sort_order = ('original_debiter_agent', 'agent_identifier')
+class OriginaldebtorAgent(XmlModel):
+    _sort_order = ('original_debtor_agent', 'agent_identifier')
     
     def __init__(self):
-        self.original_debiter_agent = XmlField('OrgnlDbtrAgt')
+        self.original_debtor_agent = XmlField('OrgnlDbtrAgt')
         self.agent_identifier = PhysicalLegalEntity('FinInstnId')
-        super(OriginalDebiterAgent, self).__init__('OrgnlDbtrAgt',
-                                                   'original_debiter_agent')
+        super(OriginaldebtorAgent, self).__init__('OrgnlDbtrAgt',
+                                                   'original_debtor_agent')
 
 
 class ReferenceType(XmlModel):
@@ -83,15 +83,15 @@ class DateAndPlaceOfBirth(XmlModel):
         
 class ModificationDetails(XmlModel):
     _sort_order = ('modification_details', 'original_mandate_id',
-                   'original_creditor_id', 'original_debiter_account',
-                   'original_debiter_agent')
+                   'original_creditor_id', 'original_debtor_account',
+                   'original_debtor_agent')
 
     def __init__(self):
         self.modification_details = XmlField('AmdmntInfDtls')
         self.original_mandate_id = XmlField('OrgnlMndtId')
         self.original_creditor_id = GenericPhysicalLegalEntity('OrgnlMndtId')
-        self.original_debiter_account = BankAccount('OrgnlDbtrAcct')
-        self.original_debiter_agent = OriginalDebiterAgent()
+        self.original_debtor_account = BankAccount('OrgnlDbtrAcct')
+        self.original_debtor_agent = OriginaldebtorAgent()
         super(ModificationDetails, self).__init__('AmdmntInfDtls',
                                                   'modification_details')
 
@@ -343,23 +343,23 @@ class BankAgent(XmlModel):
         
 class DirectDebitOperationInfo(XmlModel):
     _sort_order = ('direct_debit_operation_info', 'payment_identifier',
-                   'ordered_amount', 'charge_clausule',
+                   'instructed_amount', 'charge_clausule',
                    'direct_debit_operation', 'ultimate_creditor',
-                   'ultimate_creditor', 'debiter_agent', 'debiter',
-                   'debiter_account', 'ultimate_debiter', 'purpose',
+                   'ultimate_creditor', 'debtor_agent', 'debtor',
+                   'debtor_account', 'ultimate_debtor', 'purpose',
                    'regulatory_reglament', 'concept')
 
     def __init__(self):
         self.direct_debit_operation_info = XmlField('DrctDbtTxInf')
         self.payment_identifier = PaymentIdentifier()
-        self.ordered_amount = XmlField('InstdAmt')
+        self.instructed_amount = XmlField('InstdAmt')
         self.charge_clausule = XmlField('ChrgBr')
         self.direct_debit_operation = DirectDebitOperation()
         self.ultimate_creditor = GenericPhysicalLegalEntity('UltmtCdtr')
-        self.debiter_agent = BankAgent('DbtrAgt')
-        self.debiter = GenericPhysicalLegalEntity('Dbtr')
-        self.debiter_account = BankAccount('DbtrAcct')
-        self.ultimate_debiter = GenericPhysicalLegalEntity('UltmDbtr')
+        self.debtor_agent = BankAgent('DbtrAgt')
+        self.debtor = GenericPhysicalLegalEntity('Dbtr')
+        self.debtor_account = BankAccount('DbtrAcct')
+        self.ultimate_debtor = GenericPhysicalLegalEntity('UltmDbtr')
         self.purpose = Purpose()
         self.regulatory_reglament = RegulatoryInformation()
         self.concept = Concept()
