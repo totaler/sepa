@@ -352,7 +352,7 @@ class DirectDebitOperationInfo(XmlModel):
     def __init__(self):
         self.direct_debit_operation_info = XmlField('DrctDbtTxInf')
         self.payment_identifier = PaymentIdentifier()
-        self.instructed_amount = XmlField('InstdAmt')
+        self.instructed_amount = XmlField('InstdAmt', attributes={'Ccy': ''})
         self.charge_clausule = XmlField('ChrgBr')
         self.direct_debit_operation = DirectDebitOperation()
         self.ultimate_creditor = GenericPhysicalLegalEntity('UltmtCdtr')
@@ -365,6 +365,9 @@ class DirectDebitOperationInfo(XmlModel):
         self.concept = Concept()
         super(DirectDebitOperationInfo,
               self).__init__('DrctDbtTxInf', 'direct_debit_operation_info')
+              
+    def set_currency(self, ccy):
+        self.instructed_amount.attributes.update({'Ccy': ccy})
         
 
 ############################### Level 1 ######################################
@@ -412,6 +415,13 @@ class PaymentInformation(XmlModel):
                                                  'payment_information')
 
 
+class OriginalGroupInfo(XmlModel):
+    pass
+
+
+class OriginalPaymentInfo(XmlModel):
+    pass
+
 ############################### Level 0 ######################################
 
 
@@ -422,4 +432,19 @@ class DirectDebitInitMessage(XmlModel):
         self.root = XmlField('CstmrDrctDbtInitn')
         self.sepa_header = SepaHeader()
         self.payment_information = [] # PaymentInformation
-        super(DirectDebitInitMessage, self).__init__('CstmrDrctDbtInitn', 'root')
+        super(DirectDebitInitMessage, self).__init__('CstmrDrctDbtInitn',
+                                                     'root')
+        
+        
+class DirectDebitDevolutionMessage(XmlModel):
+    sort_order = ('root', 'sepa_header', 'original_group_info',
+                  'original_payment_info')
+    
+    def __init__(self):
+        self.root = XmlField('CstmPmtStsRpt')
+        self.sepa_header = SepaHeader()
+        self.original_group_info = OriginalGroupInfo()
+        self.original_payment_info = [] # OriginalPaymentInfo
+        super(DirectDebitDevolutionMessage, self).__init__('CstmPmtStsRpt',
+                                                           'root')
+        
