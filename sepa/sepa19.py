@@ -504,7 +504,10 @@ class OriginalGroupInfo(XmlModel):
 
 
 class OriginalPaymentInfo(XmlModel):
-    _sort_order = ()
+    _sort_order = ('original_payment_info', 'original_payment_id',
+                   'original_number_of_operations', 'original_checksum',
+                   'payment_information_status', 'status_reason_info',
+                   'operation_status_info')
     
     def __init__(self):
         self.original_payment_info = XmlField('OrgnlPmtInfAndSts')
