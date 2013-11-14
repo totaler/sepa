@@ -447,7 +447,7 @@ class SepaHeader(XmlModel):
                    'creditor_agent')
     
     def __init__(self):
-        self.sepa_header = XmlField('GrpHrd')
+        self.sepa_header = XmlField('GrpHdr')
         self.message_id = XmlField('MsgId')
         self.creation_date_time = XmlField('CreDtTm')
         self.number_of_operations = XmlField('NbOfTxs')
@@ -455,7 +455,7 @@ class SepaHeader(XmlModel):
         self.initiating_party = GenericPhysicalLegalEntity('InitgPty')
         # DirectDebitDevolutionMessage Specifics
         self.creditor_agent = BankAgent('CdtrAgt')
-        super(SepaHeader, self).__init__('GrpHrd', 'sepa_header')
+        super(SepaHeader, self).__init__('GrpHdr', 'sepa_header')
 
 
 class PaymentInformation(XmlModel):
