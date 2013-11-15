@@ -462,9 +462,9 @@ class PaymentInformation(XmlModel):
     _sort_order = ('payment_information', 'payment_info_identifier',
                    'payment_method', 'batchbook', 'number_of_operations',
                    'checksum', 'payment_type_info', 'collection_date',
-                   'creditor_account', 'creditor_agent', 'ultimate_creditor',
-                   'charge_clausule', 'creditor_identifier',
-                   'direct_debit_operation_info')
+                   'creditor', 'creditor_account', 'creditor_agent',
+                   'ultimate_creditor', 'charge_clausule',
+                   'creditor_identifier', 'direct_debit_operation_info')
     
     def __init__(self):
         self.payment_information = XmlField('PmtInf')
