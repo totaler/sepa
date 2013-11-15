@@ -7,6 +7,8 @@ from libcomxml.core import XmlModel, XmlField
 " - Order of reference in documentation
 """
 
+MAX_NAME = 70
+
 ############################### Level 7 ######################################
 
 
@@ -332,7 +334,7 @@ class GenericPhysicalLegalEntity(XmlModel):
     
     def __init__(self, tag):
         self.main_tag = XmlField(tag)
-        self.entity_name = XmlField('Nm')
+        self.entity_name = XmlField('Nm', rep=lambda x: x[:MAX_NAME])
         self.postal_address = PostalAddress()
         self.identification = GenericPhysicalLegalEntityId()
         super(GenericPhysicalLegalEntity, self).__init__(tag, 'main_tag')
@@ -356,7 +358,7 @@ class NameAndAddress(XmlModel):
     
     def __init__(self, tag):
         self.main_tag = XmlField(tag)
-        self.name_name = XmlField('Nm')
+        self.name_name = XmlField('Nm', rep=lambda x: x[:MAX_NAME])
         self.postal_address = PostalAddress()
         super(NameAndAddress, self).__init__(tag, 'main_tag')
 
