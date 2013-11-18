@@ -527,6 +527,7 @@ class OriginalPaymentInfo(XmlModel):
 
 
 class DirectDebitInitMessage(XmlModel):
+    ''' ISO 20222 - pain.008.001.02 ''' 
     _sort_order = ('root', 'sepa_header', 'payment_information')
     
     def __init__(self):
@@ -535,17 +536,4 @@ class DirectDebitInitMessage(XmlModel):
         self.payment_information = [] # PaymentInformation
         super(DirectDebitInitMessage, self).__init__('CstmrDrctDbtInitn',
                                                      'root')
-        
-        
-class DirectDebitDevolutionMessage(XmlModel):
-    sort_order = ('root', 'sepa_header', 'original_group_info',
-                  'original_payment_info')
-    
-    def __init__(self):
-        self.root = XmlField('CstmPmtStsRpt')
-        self.sepa_header = SepaHeader()
-        self.original_group_info = OriginalGroupInfo()
-        self.original_payment_info = [] # OriginalPaymentInfo
-        super(DirectDebitDevolutionMessage, self).__init__('CstmPmtStsRpt',
-                                                           'root')
-        
+

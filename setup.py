@@ -5,7 +5,7 @@ from distutils.core import setup
 setup(
     name='sepa',
     version='0.0.1-dev',
-    url='TODO',
+    url='',
     author='Grup El Gas, S.A.',
     author_email='informatica@el-gas.es',
     packages=['sepa'],
