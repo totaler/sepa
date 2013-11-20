@@ -13,7 +13,12 @@ class Amount(XmlModel):
         self.amount = XmlField('Amt')
         self.instructed_amount = XmlField('InstdAmt', attributes={'Ccy': ''})
         super(Amount, self).__init__('Amt', 'amount')
-        
+
+
+    def set_currency(self, ccy):
+        self.instructed_amount.attributes.update({'Ccy': ccy})
+
+
 ############################### Level 2 ######################################
 
 
@@ -48,18 +53,18 @@ class PaymentInformation(XmlModel):
     _sort_order = ('payment_information', 'payment_info_identifier',
                    'payment_method', 'batchbook', 'number_of_operations',
                    'checksum', 'payment_type_info', 'collection_date',
-                   'debtor', 'debtor_account', 'ultimate_debtor', 'charge_br',
-                   'credit_transfer_info')
+                   'debtor', 'debtor_account',  'debtor_agent',
+                   'ultimate_debtor', 'charge_br', 'credit_transfer_info')
     
     def __init__(self):
         self.payment_information = XmlField('PmtInf')
         self.payment_info_identifier = XmlField('PmtInfId')
-        self.payment_method = XmlField('PmntMtd')
+        self.payment_method = XmlField('PmtMtd')
         self.batchbook = XmlField('BtchBookg')
         self.number_of_operations = XmlField('NbOfTxs')
         self.checksum = XmlField('CtrlSum')
         self.payment_type_info = PaymentTypeInfo()
-        self.collection_date = XmlField('ReqdColltnDt')
+        self.collection_date = XmlField('ReqdExctnDt')
         self.debtor = GenericPhysicalLegalEntity('Dbtr')
         self.debtor_account = BankAccount('DbtrAcct')
         self.debtor_agent = BankAgent('DbtrAgt')
@@ -74,11 +79,26 @@ class PaymentInformation(XmlModel):
 
 
 class CustomerCreditTransfer(XmlModel):
-    _sort_order = ('root', 'sepa_header', 'payment_information')
+    _sort_order = ('customer_credit_transfer', 'sepa_header',
+                   'payment_information')
     
     def __init__(self):
-        self.root = XmlField('CstmrCdtTrfInitn')
+        self.customer_credit_transfer = XmlField('CstmrCdtTrfInitn')
         self.sepa_header = SepaHeader()
         self.payment_information = [] # PaymentInformation
         super(CustomerCreditTransfer, self).__init__('CstmrCdtTrfInitn',
-                                                     'root')
+                                                     'customer_credit_transfer')
+        
+############################### Level -1 #####################################
+
+class Document34(XmlModel):
+    _sort_order = ('root', 'customer_credit_transfer')
+    
+    def __init__(self):
+        xmlns = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03"
+        xsi = "http://www.w3.org/2001/XMLSchema-instance"
+        
+        self.root = XmlField('Document', attributes={'xmlns': xmlns})
+        self.customer_credit_transfer = CustomerCreditTransfer()
+        super(Document34, self).__init__('Document', 'root')
+

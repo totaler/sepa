@@ -330,7 +330,7 @@ class OriginalOperationRef(XmlModel):
 
 
 class GenericPhysicalLegalEntity(XmlModel):
-    _sort_order = ('main_tag', 'entity_name', 'PostalAddress', 'identification')
+    _sort_order = ('main_tag', 'entity_name', 'postal_address', 'identification')
     
     def __init__(self, tag):
         self.main_tag = XmlField(tag)
@@ -345,7 +345,7 @@ class PaymentTypeInfo(XmlModel):
                    'sequence_type', 'category_purpouse')
     
     def __init__(self):
-        self.payment_type_info = XmlField('PmtpInf')
+        self.payment_type_info = XmlField('PmtTpInf')
         self.service_level = ServiceLevel()
         self.local_insturment = LocalInstrument()
         self.sequence_type = XmlField('SeqTp')
@@ -477,7 +477,7 @@ class PaymentInformation(XmlModel):
         self.checksum = XmlField('CtrlSum')
         self.payment_type_info = PaymentTypeInfo()
         self.collection_date = XmlField('ReqdColltnDt') # Mandatory
-        self.creditor = NameAndAddress('Crdtr') # Mandatory
+        self.creditor = NameAndAddress('Cdtr') # Mandatory
         self.creditor_account = BankAccount('CdtrAcct') # Mandatory
         self.creditor_agent = BankAgent('CdtrAgt') # Mandatory
         self.ultimate_creditor = GenericPhysicalLegalEntity('UltmtCdtr')
