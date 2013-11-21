@@ -5,6 +5,9 @@ from sepa19 import SepaHeader, GenericPhysicalLegalEntity, PaymentTypeInfo
 from sepa19 import BankAccount, BankAgent, PaymentIdentifier, Purpose
 from sepa19 import RegulatoryInformation, Concept
 
+"""
+" More info and examples at http://www.iso20022.org/message_archive.page
+"""
 
 class Amount(XmlModel):
     _sort_order = ('amount', 'instructed_amount')
@@ -91,7 +94,7 @@ class CustomerCreditTransfer(XmlModel):
         
 ############################### Level -1 #####################################
 
-class Document34(XmlModel):
+class CustomerCreditTransferDocument(XmlModel):
     _sort_order = ('root', 'customer_credit_transfer')
     
     def __init__(self):
@@ -100,5 +103,6 @@ class Document34(XmlModel):
         
         self.root = XmlField('Document', attributes={'xmlns': xmlns})
         self.customer_credit_transfer = CustomerCreditTransfer()
-        super(Document34, self).__init__('Document', 'root')
+        super(CustomerCreditTransferDocument, self).__init__('Document',
+                                                             'root')
 

@@ -2,6 +2,10 @@
 
 from libcomxml.core import XmlModel, XmlField
 
+"""
+" More info and examples at http://www.iso20022.org/message_archive.page
+"""
+
 """ Classes ar sorted by:
 " - Indentation level of its *first* reference in documentation
 " - Order of reference in documentation
@@ -455,7 +459,6 @@ class SepaHeader(XmlModel):
         self.number_of_operations = XmlField('NbOfTxs')
         self.checksum = XmlField('CtrlSum')
         self.initiating_party = GenericPhysicalLegalEntity('InitgPty')
-        # DirectDebitDevolutionMessage Specifics
         self.creditor_agent = BankAgent('CdtrAgt')
         super(SepaHeader, self).__init__('GrpHdr', 'sepa_header')
 
@@ -471,7 +474,7 @@ class PaymentInformation(XmlModel):
     def __init__(self):
         self.payment_information = XmlField('PmtInf')
         self.payment_info_identifier = XmlField('PmtInfId') # Mandatory
-        self.payment_method = XmlField('PmntMtd') # Mandatory
+        self.payment_method = XmlField('PmtMtd') # Mandatory
         self.batchbook = XmlField('BtchBookg')
         self.number_of_operations = XmlField('NbOfTxs')
         self.checksum = XmlField('CtrlSum')
@@ -536,4 +539,18 @@ class DirectDebitInitMessage(XmlModel):
         self.payment_information = [] # PaymentInformation
         super(DirectDebitInitMessage, self).__init__('CstmrDrctDbtInitn',
                                                      'root')
+        
+        
+############################### Level -1 #####################################
+ 
+class DirectDebitInitDocument(XmlModel):
+    _sort_order = ('root', 'customer_direct_debit')
+    
+    def __init__(self):
+        xmlns = "urn:iso:std:iso:20022:tech:xsd:pain.008.001.02"
+        xsi = "http://www.w3.org/2001/XMLSchema-instance"
+        
+        self.root = XmlField('Document', attributes={'xmlns': xmlns})
+        self.customer_direct_debit = DirectDebitInitMessage()
+        super(DirectDebitInitDocument, self).__init__('Document', 'root')
 
