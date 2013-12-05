@@ -134,9 +134,9 @@ class MandateInformation(XmlModel):
     
     def __init__(self):
         self.mandate_information = XmlField('MndtRltdInf')
-        self.mandate_identifier = XmlField('MndId')
+        self.mandate_identifier = XmlField('MndtId')
         self.date_of_sign = XmlField('DtOfSgntr')
-        self.modification_indicator = XmlField('AdmmntInd')
+        self.modification_indicator = XmlField('AmdmntInd')
         self.modification_details = ModificationDetails()
         self.electronic_signature = XmlField('ElctrncSgntr')
         super(MandateInformation, self).__init__('MndtRltdInf',
@@ -257,12 +257,12 @@ class PaymentIdentifier(XmlModel):
 
 
 class DirectDebitOperation(XmlModel):
-    _sort_order = ('direct_debit_operation', 'mantade_information',
+    _sort_order = ('direct_debit_operation', 'mandate_information',
                    'creditor_identifier')
 
     def __init__(self):
         self.direct_debit_operation = XmlField('DrctDbtTx')
-        self.mantade_information = MandateInformation()
+        self.mandate_information = MandateInformation()
         self.creditor_identifier = GenericPhysicalLegalEntity('CdtrSchmeId')
         super(DirectDebitOperation, self).__init__('DrctDbtTx',
                                                    'direct_debit_operation')
