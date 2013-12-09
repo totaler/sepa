@@ -67,7 +67,7 @@ class OtherLegalEntity(XmlModel):
     def __init__(self):
         self.other = XmlField('Othr')
         self.identification = XmlField('Id')
-        self.shceme_name = SchemeName()
+        self.scheme_name = SchemeName()
         self.issuer = XmlField('Issr')
         super(OtherLegalEntity, self).__init__('Othr', 'other')
 
