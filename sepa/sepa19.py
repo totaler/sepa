@@ -157,13 +157,13 @@ class RegulatoryInformationDetails(XmlModel):
 
 
 class StructuredConcept(XmlModel):
-    _sort_order = ('strcuctured_concept', 'creditor_reference')
+    _sort_order = ('structured_concept', 'creditor_reference')
     
     def __init__(self):
-        self.strcuctured_concept = XmlField('Strd')
+        self.structured_concept = XmlField('Strd')
         self.creditor_reference = CreditorGivenReference()
         super(StructuredConcept, self).__init__('CdtrRefInf',
-                                                'strcuctured_concept')
+                                                'structured_concept')
 
 class Amount(XmlModel):
     _sort_order = ('amount', 'insted_amount')
