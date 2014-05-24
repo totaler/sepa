@@ -16,31 +16,31 @@ MAX_NAME = 70
 ############################### Level 7 ######################################
 
 
-class CodeOrPropietary(XmlModel):
-    _sort_order = ('code_or_propietary', 'code')
-    
+class CodeOrProprietary(XmlModel):
+    _sort_order = ('code_or_proprietary', 'code')
+
     def __init__(self):
-        self.code_or_propietary = XmlField('CdOrPrtry')
+        self.code_or_proprietary = XmlField('CdOrPrtry')
         self.code = XmlField('Cd')
-        super(CodeOrPropietary, self).__init__('CdOrPrtry', 'code_or_propietary')
+        super(CodeOrProprietary, self).__init__('CdOrPrtry', 'code_or_proprietary')
 
 
 ############################### Level 6 ######################################
 
 
 class SchemeName(XmlModel):
-    _sort_order = ('scheme_name', 'code', 'propietary')
-    
+    _sort_order = ('scheme_name', 'code', 'proprietary')
+
     def __init__(self):
         self.scheme_name = XmlField('SchmeNm')
         self.code = XmlField('Cd')
-        self.propietary = XmlField('Prtry')
+        self.proprietary = XmlField('Prtry')
         super(SchemeName, self).__init__('SchmeNm', 'scheme_name')
 
 
 class OriginaldebtorAgent(XmlModel):
     _sort_order = ('original_debtor_agent', 'agent_identifier')
-    
+
     def __init__(self):
         self.original_debtor_agent = XmlField('OrgnlDbtrAgt')
         self.agent_identifier = PhysicalLegalEntity('FinInstnId')
@@ -49,11 +49,11 @@ class OriginaldebtorAgent(XmlModel):
 
 
 class ReferenceType(XmlModel):
-    _sort_order = ('reference_type', 'code_or_propietary', 'issuer')
+    _sort_order = ('reference_type', 'code_or_proprietary', 'issuer')
 
     def __init__(self):
         self.reference_type = XmlField('Tp')
-        self.code_or_propietary = CodeOrPropietary()
+        self.code_or_proprietary = CodeOrProprietary()
         self.issuer = XmlField('Issr')
         super(ReferenceType, self).__init__('Tp', 'reference_type')
 
@@ -75,7 +75,7 @@ class OtherLegalEntity(XmlModel):
 class DateAndPlaceOfBirth(XmlModel):
     _sort_order = ('date_and_place_of_birth', 'date', 'province', 'city',
                    'country', 'other')
-        
+
     def __init__(self):
         self.date_and_place_of_birth = XmlField('DtAndPlcOfBirth')
         self.date = XmlField('BirthDt')
@@ -85,8 +85,8 @@ class DateAndPlaceOfBirth(XmlModel):
         self.other = OtherLegalEntity()
         super(DateAndPlaceOfBirth, self).__init__('DtAndPlcOfBirth',
                                                   'date_and_place_of_birth')
-        
-        
+
+
 class ModificationDetails(XmlModel):
     _sort_order = ('modification_details', 'original_mandate_id',
                    'original_creditor_id', 'original_debtor_account',
@@ -103,7 +103,7 @@ class ModificationDetails(XmlModel):
 
 class CreditorGivenReference(XmlModel):
     _sort_order = ('creditor_reference', 'reference_type', 'reference')
-    
+
     def __init__(self):
         self.creditor_reference = XmlField('CdtrRefInf')
         self.reference_type = ReferenceType()
@@ -113,8 +113,8 @@ class CreditorGivenReference(XmlModel):
 
 
 ############################### Level 4 ######################################
-        
-        
+
+
 class PhysicalLegalEntity(XmlModel):
     _sort_order = ('legal_entity', 'date_and_place_of_birth', 'bic_or_bei',
                    'other')
@@ -125,13 +125,13 @@ class PhysicalLegalEntity(XmlModel):
         self.bic_or_bei = XmlField('BICOrBEI')
         self.other = OtherLegalEntity()
         super(PhysicalLegalEntity, self).__init__(tag, 'legal_entity')
-        
-        
+
+
 class MandateInformation(XmlModel):
     _sort_order = ('mandate_information', 'mandate_identifier', 'date_of_sign',
                    'modification_indicator', 'modification_details',
                    'electronic_signature')
-    
+
     def __init__(self):
         self.mandate_information = XmlField('MndtRltdInf')
         self.mandate_identifier = XmlField('MndtId')
@@ -141,7 +141,7 @@ class MandateInformation(XmlModel):
         self.electronic_signature = XmlField('ElctrncSgntr')
         super(MandateInformation, self).__init__('MndtRltdInf',
                                                  'mandate_information')
-        
+
 
 class RegulatoryInformationDetails(XmlModel):
     _sort_order = ('regulatory_information_details', 'code', 'amount',
@@ -158,7 +158,7 @@ class RegulatoryInformationDetails(XmlModel):
 
 class StructuredConcept(XmlModel):
     _sort_order = ('structured_concept', 'creditor_reference')
-    
+
     def __init__(self):
         self.structured_concept = XmlField('Strd')
         self.creditor_reference = CreditorGivenReference()
@@ -167,12 +167,12 @@ class StructuredConcept(XmlModel):
 
 class Amount(XmlModel):
     _sort_order = ('amount', 'insted_amount')
-    
+
     def __init__(self):
         self.amount = XmlField('Amt')
         self.insted_amount = XmlField('InstdAmt')
         super(Amount, self).__init__('Amt', 'amount')
-        
+
 
 ############################### Level 3 ######################################
 
@@ -198,21 +198,21 @@ class ServiceLevel(XmlModel):
 
 
 class LocalInstrument(XmlModel):
-    _sort_order = ('local_insturment', 'code')
+    _sort_order = ('local_instrument', 'code')
 
     def __init__(self):
-        self.local_insturment = XmlField('LclInstrm')
+        self.local_instrument = XmlField('LclInstrm')
         self.code = XmlField('Cd')
-        super(LocalInstrument, self).__init__('LclInstrm', 'local_insturment')
+        super(LocalInstrument, self).__init__('LclInstrm', 'local_instrument')
 
- 
+
 class CategoryPurpose(XmlModel):
     _sort_order = ('category_purpose', 'code')
 
     def __init__(self):
         self.category_purpose = XmlField('CtgyPurp')
         self.code = XmlField('Cd')
-        self.propietary = XmlField('Prtry')
+        self.proprietary = XmlField('Prtry')
         super(CategoryPurpose, self).__init__('CtgyPurp', 'category_purpose')
 
 
@@ -270,17 +270,17 @@ class DirectDebitOperation(XmlModel):
 
 class Purpose(XmlModel):
     _sort_order = ('purpose', 'code')
-    
+
     def __init__(self):
         self.purpose = XmlField('Purp')
         self.code = XmlField('Cd')
         super(Purpose, self).__init__('Purp', 'purpose')
-         
+
 
 class RegulatoryInformation(XmlModel):
     _sort_order = ('regulatory_information', 'information_range',
                    'information_details')
-    
+
     def __init__(self):
         self.regulatory_information = XmlField('RgltryRptg')
         self.information_range = XmlField('DbtCdtRptgInd')
@@ -288,16 +288,16 @@ class RegulatoryInformation(XmlModel):
         super(RegulatoryInformation, self).__init__('RegulatoryInformation',
                                                     'regulatory_information')
 
-    
+
 class Concept(XmlModel):
     _sort_order = ('concept', 'unstructured', 'structured')
-    
+
     def __init__(self):
         self.concept = XmlField('RmtInf')
         self.unstructured = XmlField('Ustrd')
         self.structured = StructuredConcept()
         super(Concept, self).__init__('RmtInf', 'concept')
-        
+
 
 class Reason(XmlModel):
     _sort_order = ('reason', 'code')
@@ -313,7 +313,7 @@ class OriginalOperationRef(XmlModel):
                     'creditor_identifier', 'payment_type_info', 'mandate_info',
                     'concept', 'ultimate_debtor', 'debtor', 'debtor_account',
                     'creditor', 'ultimate_creditor')
-    
+
     def __init__(self):
         self.original_operation_ref = XmlField('OrgnlTxRef')
         self.amount = Amount() # TODO Im HERE
@@ -335,7 +335,7 @@ class OriginalOperationRef(XmlModel):
 
 class GenericPhysicalLegalEntity(XmlModel):
     _sort_order = ('main_tag', 'entity_name', 'postal_address', 'identification')
-    
+
     def __init__(self, tag):
         self.main_tag = XmlField(tag)
         self.entity_name = XmlField('Nm', rep=lambda x: x[:MAX_NAME])
@@ -345,21 +345,21 @@ class GenericPhysicalLegalEntity(XmlModel):
 
 
 class PaymentTypeInfo(XmlModel):
-    _sort_order = ('payment_type_info', 'service_level', 'local_insturment',
-                   'sequence_type', 'category_purpouse')
-    
+    _sort_order = ('payment_type_info', 'service_level', 'local_instrument',
+                   'sequence_type', 'category_purpose')
+
     def __init__(self):
         self.payment_type_info = XmlField('PmtTpInf')
         self.service_level = ServiceLevel()
-        self.local_insturment = LocalInstrument()
+        self.local_instrument = LocalInstrument()
         self.sequence_type = XmlField('SeqTp')
-        self.category_purpouse = CategoryPurpose()
+        self.category_purpose = CategoryPurpose()
         super(PaymentTypeInfo, self).__init__('PmtTpInf', 'payment_type_info')
 
 
 class NameAndAddress(XmlModel):
     _sort_order = ('main_tag', 'name_name', 'postal_address')
-    
+
     def __init__(self, tag):
         self.main_tag = XmlField(tag)
         self.name_name = XmlField('Nm', rep=lambda x: x[:MAX_NAME])
@@ -369,7 +369,7 @@ class NameAndAddress(XmlModel):
 
 class BankAccount(XmlModel):
     _sort_order = ('creditor_account', 'account_identification', 'currency')
-    
+
     def __init__(self, tag):
         self.bank_account = XmlField(tag)
         self.account_identification = AccountIdentification()
@@ -379,13 +379,13 @@ class BankAccount(XmlModel):
 
 class BankAgent(XmlModel):
     _sort_order = ('bank_agent', 'agent_identifier')
-    
+
     def __init__(self, tag):
         self.bank_agent = XmlField(tag)
         self.agent_identifier = AgentIdentifier()
         super(BankAgent, self).__init__('CdtrAgt', 'bank_agent')
-        
-        
+
+
 class DirectDebitOperationInfo(XmlModel):
     _sort_order = ('direct_debit_operation_info', 'payment_identifier',
                    'instructed_amount', 'charge_clausule',
@@ -410,14 +410,14 @@ class DirectDebitOperationInfo(XmlModel):
         self.concept = Concept()
         super(DirectDebitOperationInfo,
               self).__init__('DrctDbtTxInf', 'direct_debit_operation_info')
-              
+
     def set_currency(self, ccy):
         self.instructed_amount.attributes.update({'Ccy': ccy})
-        
-        
+
+
 class StatusReasonInfo(XmlModel):
     _sort_order = ('status_reason_info', 'originator', 'reason')
-    
+
     def __init__(self):
         self.status_reason_info = XmlField('StsRsnInf')
         self.originator = GenericPhysicalLegalEntity('Orgtr')
@@ -431,7 +431,7 @@ class OperationStatusInfo(XmlModel):
                    'original_insruction_id', 'original_end_to_end_id',
                    'operation_status', 'status_reason_info',
                    'original_operation_ref')
-    
+
     def __init__(self):
         self.operation_status_info = XmlField('TxInfAndSts')
         self.status_id = XmlField('StsId')
@@ -451,7 +451,7 @@ class SepaHeader(XmlModel):
     _sort_order = ('sepa_header', 'message_id', 'creation_date_time',
                    'number_of_operations', 'checksum', 'initiating_party',
                    'creditor_agent')
-    
+
     def __init__(self):
         self.sepa_header = XmlField('GrpHdr')
         self.message_id = XmlField('MsgId')
@@ -470,7 +470,7 @@ class PaymentInformation(XmlModel):
                    'creditor', 'creditor_account', 'creditor_agent',
                    'ultimate_creditor', 'charge_clausule',
                    'creditor_identifier', 'direct_debit_operation_info')
-    
+
     def __init__(self):
         self.payment_information = XmlField('PmtInf')
         self.payment_info_identifier = XmlField('PmtInfId') # Mandatory
@@ -495,7 +495,7 @@ class OriginalGroupInfo(XmlModel):
     _sort_order = ('original_group_info', 'original_msg_id',
                    'original_msg_name_id', 'original_number_of_operations',
                    'original_checksum', 'group_state', 'status_reason_info')
-    
+
     def __init__(self):
         self.original_group_info = XmlField('OrgnlGrpInfAndSts')
         self.original_msg_id = XmlField('OrgnlMsgId')
@@ -513,7 +513,7 @@ class OriginalPaymentInfo(XmlModel):
                    'original_number_of_operations', 'original_checksum',
                    'payment_information_status', 'status_reason_info',
                    'operation_status_info')
-    
+
     def __init__(self):
         self.original_payment_info = XmlField('OrgnlPmtInfAndSts')
         self.original_payment_id = XmlField('OrgnlPmtInfId')
@@ -530,26 +530,26 @@ class OriginalPaymentInfo(XmlModel):
 
 
 class DirectDebitInitMessage(XmlModel):
-    ''' ISO 20222 - pain.008.001.02 ''' 
+    ''' ISO 20222 - pain.008.001.02 '''
     _sort_order = ('root', 'sepa_header', 'payment_information')
-    
+
     def __init__(self):
         self.root = XmlField('CstmrDrctDbtInitn')
         self.sepa_header = SepaHeader()
         self.payment_information = [] # PaymentInformation
         super(DirectDebitInitMessage, self).__init__('CstmrDrctDbtInitn',
                                                      'root')
-        
-        
+
+
 ############################### Level -1 #####################################
- 
+
 class DirectDebitInitDocument(XmlModel):
     _sort_order = ('root', 'customer_direct_debit')
-    
+
     def __init__(self):
         xmlns = "urn:iso:std:iso:20022:tech:xsd:pain.008.001.02"
         xsi = "http://www.w3.org/2001/XMLSchema-instance"
-        
+
         self.root = XmlField('Document', attributes={'xmlns': xmlns})
         self.customer_direct_debit = DirectDebitInitMessage()
         super(DirectDebitInitDocument, self).__init__('Document', 'root')
