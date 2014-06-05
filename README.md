@@ -1,55 +1,57 @@
 #SEPA library
 
-This library allows you to build SEPA XML's using python objects
+This library allows you to build SEPA XML's using Python
 
 With this library you can build:
 
 * ISO 20022 - pain.008.001.02 (Direct debit, no B2B)
 * ISO 20022 - pain.001.001.03 (Credit transfer)
 
-It depends on [libComXML](https://github.com/gisce/libComXML)
+##Dependencies
 
-Below you can find a little example on how you should use this library
+* [libComXML](https://github.com/gisce/libComXML)
+
+##Usage
 
 ```python
+from sepa.helpers import DirectDebitMessage
 
-	from sepa import sepa19
+# Creditor information
+creditor_name = 'YOUR COMPANY NAME'
+creditor_iban = 'FR123456789012345678901234'
+creditor_bic = 'SWIFTCODE'
+creditor_identifier = 'FR12ZZZ123456'
 
-    def _sepa_header(self):
-        
-        header = sepa19.SepaHeader()
-        header_fields = {
-            'message_id': message_id,
-            'creation_date_time': iso_today,
-            'number_of_operations': num_operations,
-            'checksum': total,
-            'initiating_party': initiating_party
-        }
-        header.feed(header_fields)
-        return header
+# Instantiate the message
+direct_debit_message = DirectDebitMessage(
+    creditor_name,
+    'REF1234', # Reference of your choice
+)
 
-	def _payments_info(self):
-		'''builds payments info'''
-		return payments_info
+# Add a FRST transactions batch
+batch = direct_debit_message.add_batch(
+    'FRST1234', # Reference of your choice
+    'FRST',
+    creditor_name,
+    creditor_iban,
+    creditor_bic,
+    creditor_identifier)
 
-	def build_xml(self):
+# Debtor information
+debtor_name = 'John Doe'
+debtor_bic = 'SWIFTCODE'
+debtor_iban = 'FR123456789012345678909876'
 
-	    xml = sepa19.DirectDebitInitDocument()
-	    direct_debit = sepa19.DirectDebitInitMessage()
-	            
-	    header = self._sepa_header()
-	    payments_info = self._payments_info()
-	            
-	    direct_debit.feed({
-	        'sepa_header': header,
-	        'payment_information': payments_info
-	    })
-	    xml.feed({
-	        'customer_direct_debit': direct_debit
-	    })
-	    
-	    xml.pretty_print = True
-	    xml.build_tree()
-	    return str(xml)
+# Insert a FRST transaction
+operation = batch.add_operation(
+    100,
+    'REF2345', # Internal transaction reference
+    '++SEPA.REF1234567890',
+    datetime.date('2014', '04', '30'),
+    debtor_name,
+    debtor_bic,
+    debtor_iban)
+
+# Display the XML message
+print direct_debit_message.get_xml()
 ```
-
