@@ -170,9 +170,7 @@ class DirectDebitMessage(object):
         # Batch nodes
         for batch in self.batches:
             payment_information = batch.get_xml_node()
-            direct_debit.feed({
-                'payment_information': payment_information
-            })
+            direct_debit.payment_information.append(payment_information)
 
         xml.feed({
             'customer_direct_debit': direct_debit
