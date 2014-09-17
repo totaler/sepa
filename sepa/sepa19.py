@@ -217,7 +217,7 @@ class CategoryPurpose(XmlModel):
 
 
 class PostalAddress(XmlModel):
-    _sort_order = ('postal_address', 'country', 'address_line')
+    _sort_order = ('postal_address', 'country', 'address_line_1', 'address_line_2')
 
     def __init__(self):
         self.postal_address = XmlField('PstlAdr')
