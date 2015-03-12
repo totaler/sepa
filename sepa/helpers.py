@@ -76,6 +76,10 @@ class _DirectDebitBatchMessage(object):
         return operation
 
     def get_xml_node(self):
+
+        if self.get_number_of_operations() == 0:
+            return
+
         now = datetime.datetime.now()
         payment_information = sepa19.PaymentInformation()
         payment_information.feed({
