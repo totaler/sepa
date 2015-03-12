@@ -10,7 +10,8 @@ DEFAULT_CURRENCY = 'EUR'
 class _DirectDebitOperationMessage(object):
 
     def __init__(self, amount, end_to_end_identifier, mandate_identifier,
-        mandate_date_of_sign, debtor_name, debtor_bic, debtor_iban, ccy=None):
+        mandate_date_of_sign, debtor_name, debtor_bic, debtor_iban, ccy=None,
+        old_debtor_bic=None, old_debtor_iban=None):
         self.amount = amount
         self.end_to_end_identifier = end_to_end_identifier
         self.mandate_identifier = mandate_identifier
@@ -19,6 +20,19 @@ class _DirectDebitOperationMessage(object):
         self.debtor_bic = debtor_bic
         self.debtor_iban = debtor_iban
         self.ccy = ccy or DEFAULT_CURRENCY
+        self.old_debtor_bic = old_debtor_bic
+        self.old_debtor_iban = old_debtor_iban
+
+    def has_mandate_modification(self):
+        """
+        If available, old_debtor_* attributes determines whether or not something
+        has changed about the bank account.
+        """
+        return (
+            self.old_debtor_bic and self.old_debtor_bic != self.debtor_bic
+        ) or (
+            self.old_debtor_iban and self.old_debtor_iban != self.debtor_iban
+        )
 
     def get_xml_node(self):
         direct_debit_operation_info = sepa19.DirectDebitOperationInfo()
@@ -27,10 +41,29 @@ class _DirectDebitOperationMessage(object):
         direct_debit_operation_info.payment_identifier.feed({
             'end_to_end_identifier': self.end_to_end_identifier,
         })
-        direct_debit_operation_info.direct_debit_operation.mandate_information.feed({
+
+        mandate_information = {
             'mandate_identifier': self.mandate_identifier,
             'date_of_sign': self.mandate_date_of_sign.isoformat(),
-        })
+        }
+
+        # Manage a bank account change
+        if self.has_mandate_modification():
+            mandate_information['modification_indicator'] = 'true'
+            modification_details = sepa19.ModificationDetails()
+            # Did the bank change (based on BIC code)
+            if self.old_debtor_bic[:4] != self.debtor_bic[:4]:
+                modification_details.original_debtor_agent.agent_identifier.other.feed({
+                    'identification': 'SMNDA',
+                })
+            else:
+                modification_details.original_debtor_account.account_identification.feed({
+                    'iban': self.old_debtor_iban,
+                })
+            mandate_information['modification_details'] = modification_details
+
+        direct_debit_operation_info.direct_debit_operation.mandate_information.feed(mandate_information)
+
         direct_debit_operation_info.debtor_agent.agent_identifier.feed({
             'bic': self.debtor_bic,
         })
@@ -62,7 +95,8 @@ class _DirectDebitBatchMessage(object):
         return len(self.operations)
 
     def add_operation(self, amount, end_to_end_identifier, mandate_identifier,
-        mandate_date_of_sign, debtor_name, debtor_bic, debtor_iban, ccy=None):
+        mandate_date_of_sign, debtor_name, debtor_bic, debtor_iban, ccy=None,
+        old_debtor_bic=None, old_debtor_iban=None):
         operation = _DirectDebitOperationMessage(
             amount,
             end_to_end_identifier,
@@ -71,7 +105,9 @@ class _DirectDebitBatchMessage(object):
             debtor_name,
             debtor_bic,
             debtor_iban,
-            ccy)
+            ccy,
+            old_debtor_bic,
+            old_debtor_iban)
         self.operations.append(operation)
         return operation
 
