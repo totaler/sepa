@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from libcomxml.core import XmlModel, XmlField
-from sepa19 import SepaHeader, GenericPhysicalLegalEntity, PaymentTypeInfo
-from sepa19 import BankAccount, BankAgent, PaymentIdentifier, Purpose
-from sepa19 import RegulatoryInformation, Concept
+from .sepa19 import SepaHeader, GenericPhysicalLegalEntity, PaymentTypeInfo
+from .sepa19 import BankAccount, BankAgent, PaymentIdentifier, Purpose
+from .sepa19 import RegulatoryInformation, Concept
 
 """
 " More info and examples at http://www.iso20022.org/message_archive.page
